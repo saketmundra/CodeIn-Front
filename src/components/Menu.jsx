@@ -1,4 +1,5 @@
-import React from "react";
+import React ,{useEffect,useState}from "react";
+import axios from "axios"
 import styled from "styled-components";
 import HomeIcon from "@mui/icons-material/Home";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -79,6 +80,15 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
+  const [videos,setVideos]=useState([])
+  useEffect(() => {
+    const fetchVideos=async()=>{
+      const res=await axios.get("/api/video/random")
+      setVideos(res.data);
+    }
+    fetchVideos();
+    
+  },[])
   return (
     <Container>
       <Wrapper>
@@ -111,7 +121,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           Android Dev
         </Item>
         <Item>
-          <DataObjectIcon/>
+          <DataObjectIcon />
           Data Science
         </Item>
         <Item>

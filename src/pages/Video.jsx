@@ -1,11 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Reviews from "../components/Reviews";
 import Card from "../components/Card";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { dislike, fetchSuccess, like } from "../redux/videoSlice";
+import { format } from "timeago.js";
+import Recommendation from "../components/Recommendation";
 
 const Container = styled.div`
   display: flex;
@@ -53,9 +60,7 @@ const Hr = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.soft};
 `;
 
-const Recommendation = styled.div`
-  flex: 1.5;
-`;
+
 const Channel = styled.div`
   display: flex;
   justify-content: space-between;
@@ -105,28 +110,52 @@ const Subscribe = styled.button`
     background-color: ${({ theme }) => theme.soft};
   }
 `;
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
+  object-fit: cover;
+`;
 
 const Video = () => {
+  
+  const { currentVideo } = useSelector((state) => state.video);
+  const dispatch = useDispatch();
+
+  const path = useLocation().pathname.split("/")[2];
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const videoRes = await axios.get(
+          `/api/video/find/${path}`
+        );
+        const channelRes = await axios.get(
+          `/api/users/find/${videoRes.data.userId}`
+        );
+        setChannel(channelRes.data);
+        dispatch(fetchSuccess(videoRes.data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [path, dispatch]);
+
+
+
   return (
     <Container>
       <Content>
         <VideoWrapper>
-          <iframe
-            width="100%"
-            height="460px"
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+        <VideoFrame src={currentVideo.videoUrl} controls />
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
-          <Info>7,948,154 views • Jun 22, 2022</Info>
+          <Info>{currentVideo.views} views •  {format(currentVideo.createdAt)}</Info>
           <Buttons>
             <Button>
-              <ThumbUpOutlinedIcon /> 123
+              <ThumbUpOutlinedIcon /> 
             </Button>
             <Button>
               <ReplyOutlinedIcon /> Share
@@ -139,35 +168,25 @@ const Video = () => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Code.org_logo.svg/1200px-Code.org_logo.svg.png" />
+            <Image src={channel.img} />
             <ChannelDetail>
-              <ChannelName>Pepcoding</ChannelName>
+              <ChannelName>{channel.name}</ChannelName>
               <ChannelCounter>200K Views</ChannelCounter>
               <h4>About the Course</h4>
               <Description>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Doloribus laborum delectus unde quaerat dolore culpa sit aliquam
-                at. Vitae facere ipsum totam ratione exercitationem. Suscipit
-                animi accusantium dolores ipsam ut.
+              {currentVideo.desc}
+                
               </Description>
             </ChannelDetail>
           </ChannelInfo>
-          <Subscribe><FavoriteBorderIcon/></Subscribe>
+          <Subscribe>
+            <FavoriteBorderIcon />
+          </Subscribe>
         </Channel>
         <Hr />
-        <Reviews/>
+        <Reviews />
       </Content>
-      <Recommendation>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-
-      </Recommendation>
+      <Recommendation tags={currentVideo.tags} />
     </Container>
   );
 };

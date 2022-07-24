@@ -1,9 +1,13 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import { useSelector } from "react-redux";
+import Upload from "./Upload";
 
 
 const Container = styled.div`
@@ -56,6 +60,13 @@ const Button = styled.button`
   align-items: center;
   gap: 3px;
 `;
+const User = styled.div`
+  display: flex;
+  font-weight: 500;
+  gap: 12px;
+  align-items: center;
+  color: ${({ theme }) => theme.text};
+`;
 
 const Item = styled.div`
   display: flex;
@@ -63,31 +74,47 @@ const Item = styled.div`
   gap: 10px;
   cursor: pointer;
   padding: 10px 10px;
-  border-radius:50px;
+  border-radius: 50px;
   color: ${({ theme }) => theme.text};
   &:hover {
     background-color: ${({ theme }) => theme.soft};
   }
 `;
 const Navbar = ({ darkMode, setDarkMode }) => {
+  const navigate = useNavigate()
+  const [open, setopen] = useState(false);
+  const [q, setQ] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
   return (
+    <>
     <Container>
       <Wrapper>
         <Search>
-          <Input placeholder="Search" />
-          <SearchIcon />
+          <Input placeholder="Search"
+              onChange={(e) => setQ(e.target.value)} />
+          <SearchIcon onClick={()=>navigate(`/api/search?q=${q}`)}/>
         </Search>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
         </Item>
-        <Link to="signin" style={{ textDecoration: "none" }}>
-          <Button>
-            <AccountCircleOutlinedIcon />
-            LOG IN
-          </Button>
-        </Link>
+        {currentUser ? (
+          <User>
+            <VideoCallIcon onClick={()=>setopen(true)} />
+            <AccountCircleIcon />
+            {currentUser.name}
+          </User>
+        ) : (
+          <Link to="signin" style={{ textDecoration: "none" }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              LOG IN
+            </Button>
+          </Link>
+        )}
       </Wrapper>
     </Container>
+    {open && <Upload setOpen={setopen}/>}
+    </>
   );
 };
 

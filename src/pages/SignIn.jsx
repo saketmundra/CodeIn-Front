@@ -1,5 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useState } from "react";
+import axios from "axios"
+import { useDispatch } from "react-redux";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
+
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -46,17 +52,36 @@ const Button = styled.button`
 
 
 const SignIn = () => {
+  let navigate = useNavigate();
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const dispatch=useDispatch()
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const res = await axios.post("/api/auth/signin", { name, password });
+      dispatch(loginSuccess(res.data));
+      navigate("/")
+    } catch (err) {
+      dispatch(loginFailure());
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
         <Title>Welcome to CodeIn</Title>
-        <Input placeholder="Email" />
-        <Input type="password" placeholder="Password" />
-        <Button>Login</Button>
+        <Input placeholder="Username" onChange={e=>setName(e.target.value)} />
+        <Input type="password" placeholder="Password" onChange={e=>setPassword(e.target.value)} />
+        <Button onClick={handleLogin}>Login</Button>
         <Title></Title>
-        <Input placeholder="Username" />
-        <Input placeholder="Email" />
-        <Input type="password" placeholder="Password" />
+        <Input placeholder="Username" onChange={e=>setName(e.target.value)} />
+        <Input placeholder="Email" onChange={e=>setEmail(e.target.value)} />
+        <Input type="password" onChange={e=>setPassword(e.target.value)} placeholder="Password" />
         <Button>Sign up</Button>
       </Wrapper>
     </Container>
