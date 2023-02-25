@@ -13,11 +13,11 @@ const Container = styled.div`
 const Search = () => {
   const [videos, setVideos] = useState([]);
   const query = useLocation().search;
-  console.log(query);
+
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`/api/video/search${query}`);
+      const res = await axios.get(`/api/videos/search${query}`);
       console.log(res);
       setVideos(res.data);
     };

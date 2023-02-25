@@ -83,7 +83,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
   const [videos,setVideos]=useState([])
   useEffect(() => {
     const fetchVideos=async()=>{
-      const res=await axios.get("/api/video/random")
+      const res=await axios.get("/api/videos/random")
       setVideos(res.data);
     }
     fetchVideos();
