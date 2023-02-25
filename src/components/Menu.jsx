@@ -95,13 +95,15 @@ const Menu = ({ darkMode, setDarkMode }) => {
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <Logo>
             <CodeIcon/>
-            CodeIn
+            CodeTube
           </Logo>
         </Link>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
         <Item>
           <HomeIcon />
           Home
         </Item>
+        </Link>
         <Item>
           <FavoriteIcon/>
           Wishlist

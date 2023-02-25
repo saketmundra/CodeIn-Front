@@ -118,28 +118,26 @@ const VideoFrame = styled.video`
 
 const Video = () => {
 
-  const { currentUser } = useSelector((state) => state.user);
-  const {currentVideo}  = useSelector((state) => state.video);
-  const dispatch = useDispatch();
-
-
+  // const { currentUser } = useSelector((state) => state.user);
+  // const {currentVideo}  = useSelector((state) => state.video);
+  // const dispatch = useDispatch();
 
   const path = useLocation().pathname.split("/")[2];
   const [channel, setChannel] = useState({});
-  // const [currentVideo, setCurrentVideo] = useState({})
+  const [currentVideo, setCurrentVideo] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`/api/videos/find/${path}`);
         const channelRes = await axios.get(`/api/users/find/${videoRes.data.userId}`);
-        console.log(videoRes.data)
+        setCurrentVideo(videoRes.data)
         setChannel(channelRes.data);
-        dispatch(fetchSuccess(videoRes.data));
+        // dispatch(fetchSuccess(videoRes.data));
       } catch (err) {}
     };
     fetchData();
-  }, [path,dispatch]);
+  }, [path]);
 
 
 
@@ -147,7 +145,7 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          {/* {console.log(currentVideo)} */}
+          {console.log(currentVideo)}
         <VideoFrame src={currentVideo.videoUrl} controls />
         </VideoWrapper>
         <Title>{currentVideo.title}</Title>
