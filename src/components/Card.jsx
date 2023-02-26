@@ -58,7 +58,7 @@ const Card = ({ type,video }) => {
   const [channel,setChannel]=useState({})
   useEffect(() => {
     const fetchChannel=async()=>{
-      const res=await axios.get(`/api/users/find/${video.userId}`)
+      const res=await axios.get(`https://codetube-backend-x5vx.onrender.com/api/users/find/${video.userId}`)
       setChannel(res.data);
     }
     fetchChannel();

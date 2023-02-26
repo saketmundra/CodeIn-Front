@@ -92,7 +92,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         <Search>
           <Input placeholder="Search"
               onChange={(e) => setQ(e.target.value)} />
-          <SearchIcon onClick={()=>navigate(`/api/search?q=${q}`)}/>
+          <SearchIcon onClick={()=>navigate(`https://codetube-backend-x5vx.onrender.com/api/search?q=${q}`)}/>
         </Search>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />

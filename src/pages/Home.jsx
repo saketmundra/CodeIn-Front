@@ -15,10 +15,11 @@ const Home = () => {
   const [videos,setVideos]=useState([])
   useEffect(() => {
     const fetchVideos=async()=>{
-      const res=await axios.get("/api/videos/random")
+      const res=await axios.get("https://codetube-backend-x5vx.onrender.com/api/videos/random")
       setVideos(res.data);
     }
     fetchVideos();
+    // "proxy": "https://codetube-backend-x5vx.onrender.com"
     
   },[])
   

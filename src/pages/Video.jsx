@@ -129,8 +129,8 @@ const Video = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`/api/videos/find/${path}`);
-        const channelRes = await axios.get(`/api/users/find/${videoRes.data.userId}`);
+        const videoRes = await axios.get(`https://codetube-backend-x5vx.onrender.com/api/videos/find/${path}`);
+        const channelRes = await axios.get(`https://codetube-backend-x5vx.onrender.com/api/users/find/${videoRes.data.userId}`);
         setCurrentVideo(videoRes.data)
         setChannel(channelRes.data);
         // dispatch(fetchSuccess(videoRes.data));

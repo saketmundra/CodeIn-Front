@@ -17,7 +17,7 @@ const Search = () => {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`/api/videos/search${query}`);
+      const res = await axios.get(`https://codetube-backend-x5vx.onrender.com/api/videos/search${query}`);
       console.log(res);
       setVideos(res.data);
     };
